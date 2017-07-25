@@ -1,0 +1,6 @@
+name: CMSStools
+main: com.luo123.nkplugin.CMSStools.Main
+version: 0.0.1
+author: luo123
+api: ["1.0.0"]
+load: POSTWORLD
