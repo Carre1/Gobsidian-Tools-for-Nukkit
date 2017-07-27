@@ -1,6 +1,6 @@
-name: CMSStools
-main: com.luo123.nkplugin.CMSStools.Main
+name: Gobsidian-Tools
+main: com.gobsidian.nukkitTools.Main
 version: 0.0.1
-author: luo123
+author: gobsidian
 api: ["1.0.0"]
 load: POSTWORLD
