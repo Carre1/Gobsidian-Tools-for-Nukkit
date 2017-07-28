@@ -1,10 +1,10 @@
 # This server ID
-server-id  : 628951743
+server-id  : 0000000000
 # Your Accesskey and Keysecret
-accesskey  : P1MekNBzqvSK3uyT
-keysecret  : SA9wMj3yfGprxKRoZV1WNUg0
+accesskey  : ACCESSKEY
+keysecret  : KEYSECRET
 
 
 # === Ok, please close the file to start the server ===
 # For non-advanced users please DO NOT change the following!!
-request-url : http://localhost:5001
+request-url : https://www.gobsidian.com

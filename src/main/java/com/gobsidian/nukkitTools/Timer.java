@@ -36,7 +36,8 @@ public class Timer extends PluginTask {
     @Override
     public void onRun(int i) {
         // 发送请求
-        owner.getLogger().debug("runnung!");
+//        owner.getLogger().debug("runnung!");
+        getWhitelist();
         sendStatus();
     }
 
@@ -86,7 +87,7 @@ public class Timer extends PluginTask {
       API
      */
 
-    public boolean getWhitelist() {
+    private boolean getWhitelist() {
         String result;
         int loop = 0;
 
