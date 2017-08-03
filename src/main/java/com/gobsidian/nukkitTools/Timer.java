@@ -6,9 +6,12 @@ import cn.nukkit.plugin.Plugin;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.Config;
 import cn.nukkit.plugin.PluginDescription;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -45,76 +48,66 @@ public class Timer extends PluginTask {
       功能函数
      */
 
-    private static String sendGet(String url) {
+    private static String sendGet(String url) throws IOException {
         String result = "";
         BufferedReader in = null;
-        try {
-            URL realUrl = new URL(url);
-            // 打开和URL之间的连接
-            URLConnection connection = realUrl.openConnection();
-            // 设置通用的请求属性
-            connection.setRequestProperty("accept", "*/*");
-            connection.setRequestProperty("connection", "Keep-Alive");
-            connection.setRequestProperty("user-agent",
-                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-            // 建立实际的连接
-            connection.connect();
-            // 获取所有响应头字段
-            // 定义 BufferedReader输入流来读取URL的响应
-            in = new BufferedReader(new InputStreamReader(
-                    connection.getInputStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                result += line;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        URL realUrl = new URL(url);
+        // 打开和URL之间的连接
+        URLConnection connection = realUrl.openConnection();
+        // 设置通用的请求属性
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        // 建立实际的连接
+        connection.connect();
+        // 获取所有响应头字段
+        // 定义 BufferedReader输入流来读取URL的响应
+        in = new BufferedReader(new InputStreamReader(
+                connection.getInputStream()));
+        String line;
+        while ((line = in.readLine()) != null) {
+            result += line;
         }
-        // 使用finally块来关闭输入流
-        finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
+        if (in != null) {
+            in.close();
         }
-        return result;
+        return line;
     }
 
     /*
       API
      */
 
-    private boolean getWhitelist() {
-        String result;
+    private void getWhitelist() {
+        String result = null;
         int loop = 0;
 
-        COMM:
-        //noinspection LoopStatementThatDoesntLoop
+        // 发送API请求3次，如果均失败就返回错误
         while (true) {
-            // 发送API请求3次，如果均失败就返回错误
-            while (loop < 3) {
-                try {
-                    result = sendGet(this.requestUrl + "/api/tools/whitelist?b=" + this.serverID);
-                    break COMM;
-                } catch (ArithmeticException ignored) {
-                    loop++;
+            try {
+                result = sendGet(this.requestUrl + "/api/tools/whitelist?b=" + this.serverID);
+                break;
+            } catch (Exception ignored) {
+                loop++;
+                if (loop > 3) {
+                    return;
                 }
             }
-            return false;
         }
-
         Gson gson = new Gson();
         ArrayList userlist = gson.fromJson(result, ArrayList.class);
+        if (userlist == null){
+            return;
+        }
         for (Object user : userlist) {
             owner.getServer().addWhitelist((String) user);
         }
-        return true;
+
     }
 
-    private boolean sendStatus() {
+    private void sendStatus() {
         //noinspection unchecked
         ArrayList<String> onlinePlayerList = new ArrayList();
         String result;
@@ -128,28 +121,27 @@ public class Timer extends PluginTask {
         String onlineList = gson.toJson(onlinePlayerList, ArrayList.class);
 
 
-        COMM:
         //noinspection LoopStatementThatDoesntLoop
         while (true) {
             // 发送API请求3次，如果均失败就返回错误
-            while (loop < 3) {
-                try {
-                    result = sendGet(this.requestUrl + "/api/tools/server-status?" +
-                            "b=" + this.serverID +
-                            "&key=" + this.accesskey +
-                            "&secret=" + this.secretkey +
-                            "&online-player=" + onlineList +
-                            "&online-max=" + "100" +
-                            "&tools-version=" + "1.0.0"
-                    );
-                    break COMM;
-                } catch (ArithmeticException ignored) {
-                    loop++;
+            try {
+                result = sendGet(this.requestUrl + "/api/tools/server-status?" +
+                        "b=" + this.serverID +
+                        "&key=" + this.accesskey +
+                        "&secret=" + this.secretkey +
+                        "&online-player=" + onlineList +
+                        "&online-max=" + "100" +
+                        "&tools-version=" + "1.0.0"
+                );
+                return;
+            } catch (Exception ignored) {
+                loop++;
+                if (loop > 3) {
+                    return;
                 }
             }
-            return false;
         }
 
-        return parseBoolean(result);
     }
 }
+

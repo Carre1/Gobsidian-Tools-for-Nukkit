@@ -12,7 +12,7 @@ public class Main extends PluginBase {
     public void onEnable() {
         getLogger().info("Tools is running! (http://tools.gobsidian.com) Version:");
         getLogger().info("By: luo123, Hateful_Carre1");
-
+        saveDefaultConfig();
         //配置文件对象
         Config config = new Config(getDataFolder() + "/config.yml");
         String accesskey = (String) config.get("accesskey");
