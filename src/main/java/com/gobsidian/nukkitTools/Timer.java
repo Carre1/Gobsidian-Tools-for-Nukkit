@@ -25,7 +25,7 @@ import static java.lang.Boolean.parseBoolean;
 
 public class Timer extends PluginTask {
     private Config config = new Config(owner.getDataFolder() + "/config.yml");
-    private int serverID = config.getInt("server-id");
+    private String serverID = (String) config.get("server-id");
     private String accesskey = (String) config.get("accesskey");
     private String secretkey = (String) config.get("keysecret");
     private String requestUrl = (String) config.get("request-url");
