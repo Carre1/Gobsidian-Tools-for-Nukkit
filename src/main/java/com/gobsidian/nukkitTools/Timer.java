@@ -1,22 +1,17 @@
 package com.gobsidian.nukkitTools;
 
 import cn.nukkit.Player;
-import com.google.gson.Gson;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.Config;
-import cn.nukkit.plugin.PluginDescription;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-
-import static java.lang.Boolean.parseBoolean;
 
 /**
  * Created by Administrator on 2017/7/23.
@@ -98,7 +93,7 @@ public class Timer extends PluginTask {
         }
         Gson gson = new Gson();
         ArrayList userlist = gson.fromJson(result, ArrayList.class);
-        if (userlist == null){
+        if (userlist == null) {
             return;
         }
         for (Object user : userlist) {
@@ -109,27 +104,24 @@ public class Timer extends PluginTask {
 
     private void sendStatus() {
         //noinspection unchecked
-        ArrayList<String> onlinePlayerList = new ArrayList();
-        String result;
+        StringBuilder sb = new StringBuilder();
+
         int loop = 0;
 
         // 获得在线玩家list并转成json
         for (Player player : this.owner.getServer().getOnlinePlayers().values()) {
-            onlinePlayerList.add(String.valueOf(player.getName()));
+            sb.append(player.getName()).append(",");
         }
-        Gson gson = new Gson();
-        String onlineList = gson.toJson(onlinePlayerList, ArrayList.class);
-
 
         //noinspection LoopStatementThatDoesntLoop
         while (true) {
             // 发送API请求3次，如果均失败就返回错误
             try {
-                result = sendGet(this.requestUrl + "/api/tools/server-status?" +
+                sendGet(this.requestUrl + "/api/tools/server-status?" +
                         "b=" + this.serverID +
                         "&key=" + this.accesskey +
                         "&secret=" + this.secretkey +
-                        "&online-player=" + onlineList +
+                        "&online-player=" + sb.toString() +
                         "&online-max=" + "100" +
                         "&tools-version=" + "1.0.0"
                 );
