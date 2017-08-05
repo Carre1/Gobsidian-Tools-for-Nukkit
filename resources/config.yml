@@ -1,5 +1,5 @@
 # This server ID
-server-id  : "key"
+server-id  : YOURSERVERID
 # Your Accesskey and Keysecret
 accesskey  : ACCESSKEY
 keysecret  : KEYSECRET

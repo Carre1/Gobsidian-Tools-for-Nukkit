@@ -1,6 +1,6 @@
 name: Gobsidian-Tools
 main: com.gobsidian.nukkitTools.Main
-version: 0.0.1
+version: 1.0.1
 author: gobsidian
 api: ["1.0.0"]
 load: POSTWORLD

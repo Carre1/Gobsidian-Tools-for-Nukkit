@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="GobsidianTools">
+    <output-path>E:/Nukkit/plugins</output-path>
+    <root id="archive" name="GobsidianTools.jar">
+      <element id="module-output" name="Gobsidian-Tools-for-Nukkit" />
+    </root>
+  </artifact>
+</component>
